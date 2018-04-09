@@ -21,6 +21,7 @@ class ImageScreen extends React.Component {
     title: 'Image',
   };
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <Container>
         <Header>
