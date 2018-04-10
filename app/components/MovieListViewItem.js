@@ -2,16 +2,13 @@
 import React from 'react';
 
 import {
-  StyleSheet, 
+  StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
   Dimensions
 } from 'react-native';
-
-import { connect } from 'react-redux';
-import {  mapDispatch } from '../redux/maps'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -79,14 +76,14 @@ class MovieListViewItem extends React.Component {
     const prettyReleaseDate = moment( release_date ).format( 'MM/DD/YYYY' );
 
     return (
-      <TouchableOpacity 
-        style={ [ style.container, containerStyle ] } 
-        onPress={ onPress ? onPress.bind( null, movie ) : null } 
+      <TouchableOpacity
+        style={ [ style.container, containerStyle ] }
+        onPress={ onPress ? onPress.bind( null, movie ) : null }
         disabled={ !onPress }
       >
-        <Image 
-          style={ style.image } 
-          resizeMode='cover' 
+        <Image
+          style={ style.image }
+          resizeMode='cover'
           source={ { uri: bg_image_url } }
           indicator={ ActivityIndicator }
         />
@@ -112,10 +109,4 @@ class MovieListViewItem extends React.Component {
 
 }
 
-const mapState = ( state ) => {
-  return {
-    configuration: state.configuration
-  };
-};
-
-export default connect( mapState, mapDispatch )( MovieListViewItem );
+export default MovieListViewItem;

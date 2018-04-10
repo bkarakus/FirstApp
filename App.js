@@ -4,7 +4,7 @@ import { Platform, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 //import { loadSavedTalksAsync } from './app/utils/storage';
 import { SafeAreaView } from 'react-navigation';
-import TabNavigator from './app/Navigation';
+import TabNavigator from './moviesapp/Navigation';
 
 if (Platform.OS === 'android'){
   SafeAreaView.setStatusBarHeight(0);
