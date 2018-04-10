@@ -1,53 +1,64 @@
 import React from 'react';
-import {
-  DrawerNavigator,
-} from 'react-navigation';
-import HomeScreen from './screens/HomeScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import ImageScreen from './screens/ImageScreen';
-import { Font, AppLoading } from 'expo'; //to include font from expo.;
-import { Root } from 'native-base';
+import { Asset, AppLoading, Font } from 'expo';
+import { Platform, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+//import { loadSavedTalksAsync } from './app/utils/storage';
+import { SafeAreaView } from 'react-navigation';
+import TabNavigator from './app/Navigation';
 
-const RootStack = DrawerNavigator(
-  {
-    Home: {
-      screen: HomeScreen,
-    },
-    Profile: {
-      screen: ProfileScreen,
-    },
-    ImageDetail: {
-      screen: ImageScreen,
-    },
-  },
-  {
-    initialRouteName: 'Home',
-  }
-);
+if (Platform.OS === 'android'){
+  SafeAreaView.setStatusBarHeight(0);
+}
 
 export default class App extends React.Component {
   state = {
     fontLoaded: false,
   };
-  async componentDidMount() {
-    await Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-    });
-    this.setState({ fontLoaded: true });
+
+  _loadResourcesAsync = () => {
+    return Promise.all([
+      this._loadAssetsAsync(),
+      //this._loadDataAsync(),
+    ])
   }
+
+  _loadDataAsync = () => {
+    return true;
+    //return loadSavedTalksAsync();
+  }
+
+  _loadAssetsAsync = async () => {
+    return Promise.all([
+      Font.loadAsync({
+        'open-sans-bold': require('./app/assets/OpenSans-Bold.ttf'),
+        'open-sans': require('./app/assets/OpenSans-Regular.ttf'),
+        'open-sans-semibold': require('./app/assets/OpenSans-SemiBold.ttf'),
+        ...Ionicons.font,
+      }),
+      Asset.fromModule(require('./app/assets/logo.png')).downloadAsync(),
+      Asset.fromModule(
+        require('react-navigation/src/views/assets/back-icon.png')
+      ).downloadAsync(),
+    ]);
+  };
+
   render() {
-    if (!this.state.fontLoaded){
-      return(
-        <Root>
-          <AppLoading />
-        </Root>
-      )
+    if (!this.state.fontLoaded) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={console.error}
+          onFinish={() => {
+            this.setState({ fontLoaded: true });
+          }}
+        />
+      );
     }
+
     return (
-      <Root>
-        <RootStack />
-      </Root>
+      <View style={{ flex: 1 }}>
+        <TabNavigator />
+      </View>
     );
   }
 }
